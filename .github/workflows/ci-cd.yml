@@ -39,7 +39,9 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t myapp:${{ env.VERSION }} .
+                    docker build \
+            --build-arg BUILD_VERSION=${{ env.VERSION }} \
+            -t myapp:${{ env.VERSION }} .
 
       - name: Push Docker Image to Docker Hub
         run: |

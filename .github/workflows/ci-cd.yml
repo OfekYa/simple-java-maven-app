@@ -35,21 +35,6 @@ jobs:
 
       - name: Update Version Automatically
         run: echo "VERSION=${{ steps.calculate-version.outputs.version-string }}" >> $GITHUB_ENV
-  
-      - name: Extract Project Name and Version from pom.xml
-        run: |
-          echo 'Extracting project name from pom.xml...'
-          PROJECT_NAME=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.name)
-          echo "Project name: $PROJECT_NAME"
-
-          echo 'Extracting project version from pom.xml...'
-          PROJECT_VERSION=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.version)
-          echo "Project version: $PROJECT_VERSION"
-
-      - name: Run Java Application
-        run: |
-          echo "Running Java application..."
-          java -jar target/${{ env.PROJECT_NAME }}-${{ env.PROJECT_VERSION }}.jar
 
 
       - name: Build Docker Image

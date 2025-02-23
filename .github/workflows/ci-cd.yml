@@ -22,31 +22,23 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Calculate Version
+        id: calculate-version
+        uses: bitshifted/git-auto-semver@v1
+        with:
+          main_branch: master
+          create_tag: true
+          tag_prefix: 'tags'
 
       - name: Update Version Automatically
-        run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "actions@github.com"
-          LAST_VERSION=$(git tag -l "v*" --sort=-v:refname | head -n 1 || echo "v1.0.0")
-
-          if [[ -z "$LAST_VERSION" ]]; then
-              LAST_VERSION="v1.0.0"
-          fi
-          LAST_VERSION=${LAST_VERSION#v}
-
-          NEW_VERSION=$(echo $LAST_VERSION | awk -F. '{print $1"."$2"."$3+1}')
-
-          git tag -a v$NEW_VERSION -m "Version $NEW_VERSION"
-          git push origin v$NEW_VERSION
-
-          echo " Updated version to $NEW_VERSION"
+        run: echo "VERSION=${{ steps.calculate-version.outputs.version-string }}" >> $GITHUB_ENV
 
       - name: Build Docker Image
         run: |
-          docker build -t myapp:latest .
+          docker build -t myapp:${{ env.VERSION }} .
 
       - name: Push Docker Image to Docker Hub
         run: |
           echo "${{ secrets.OFEK_DOCKERHUB_PSWRD }}" | docker login -u "${{ secrets.OFEK_DOCKERHUB }}" --password-stdin
-          docker tag myapp:latest ${{ secrets.OFEK_DOCKERHUB }}/myapp:latest
-          docker push ${{ secrets.OFEK_DOCKERHUB }}/myapp:latest
+          docker tag myapp:${{ env.VERSION }} ${{ secrets.OFEK_DOCKERHUB }}/myapp:${{ env.VERSION }}
+          docker push ${{ secrets.OFEK_DOCKERHUB }}/myapp:${{ env.VERSION }}

@@ -29,6 +29,9 @@ jobs:
           git config --global user.email "actions@github.com"
           LAST_VERSION=$(git tag -l "v*" --sort=-v:refname | head -n 1 || echo "v1.0.0")
 
+          if [[ -z "$LAST_VERSION" ]]; then
+              LAST_VERSION="v1.0.0"
+          fi
           LAST_VERSION=${LAST_VERSION#v}
 
           NEW_VERSION=$(echo $LAST_VERSION | awk -F. '{print $1"."$2"."$3+1}')

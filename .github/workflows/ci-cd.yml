@@ -24,7 +24,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Calculate Version
+      - name: Calculate Current Version
         id: calculate-version
         uses: bitshifted/git-auto-semver@v1
         with:

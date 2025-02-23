@@ -36,7 +36,7 @@ jobs:
           git tag -a v$NEW_VERSION -m "Version $NEW_VERSION"
           git push origin v$NEW_VERSION
 
-          echo "✅ Updated version to $NEW_VERSION"
+          echo " Updated version to $NEW_VERSION"
 
       - name: Build Docker Image
         run: |

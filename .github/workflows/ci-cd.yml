@@ -24,11 +24,12 @@ jobs:
 
       - name: Update Version Automatically
         run: |
-          CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | sed 's/-SNAPSHOT//')
           NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. '{print $1"."$2"."$3+1}')
 
           mvn versions:set -DnewVersion=$NEW_VERSION -DgenerateBackupPoms=false
           echo "Updated Version to $NEW_VERSION"
+          cat pom.xml | grep '<version>'
 
       - name: Build Docker Image
         run: |

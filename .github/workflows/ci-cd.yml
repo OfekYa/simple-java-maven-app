@@ -25,6 +25,8 @@ jobs:
 
       - name: Update Version Automatically
         run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
           LAST_VERSION=$(git describe --tags --match "v*" --abbrev=0 2>/dev/null || echo "v1.0.0")
 
           LAST_VERSION=${LAST_VERSION#v}

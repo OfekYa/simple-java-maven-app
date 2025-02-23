@@ -24,12 +24,20 @@ jobs:
 
       - name: Update Version Automatically
         run: |
-          CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | sed 's/-SNAPSHOT//')
-          NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. '{print $1"."$2"."$3+1}')
+        # Fetch the latest version from Git tags (fallback to 1.0.0 if no tags exist)
+          LAST_VERSION=$(git describe --tags --match "v*" --abbrev=0 2>/dev/null || echo "v1.0.0")
 
-          mvn versions:set -DnewVersion=$NEW_VERSION -DgenerateBackupPoms=false
-          echo "Updating Version to $NEW_VERSION"
-          cat pom.xml | grep '<version>'
+        # Remove the "v" prefix
+          LAST_VERSION=${LAST_VERSION#v}
+
+        # Increment the patch version (X.Y.Z → X.Y.(Z+1))
+          NEW_VERSION=$(echo $LAST_VERSION | awk -F. '{print $1"."$2"."$3+1}')
+
+        # Create a new Git tag with the updated version
+          git tag -a v$NEW_VERSION -m "Version $NEW_VERSION"
+          git push origin v$NEW_VERSION
+
+          echo "✅ Updated version to $NEW_VERSION"
 
       - name: Build Docker Image
         run: |

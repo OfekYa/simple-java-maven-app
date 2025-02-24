@@ -32,21 +32,20 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t myapp:latest .
-          docker tag myapp:latest myapp:$VERSION
+          docker build -t myapp:${{ env.VERSION }} .
 
       - name: Push Docker Image to Docker Hub
         run: |
           echo "${{ secrets.OFEK_DOCKERHUB_PSWRD }}" | docker login -u "${{ secrets.OFEK_DOCKERHUB }}" --password-stdin
-          docker push myapp:$VERSION
-
+          docker tag myapp:${{ env.VERSION }} ${{ secrets.OFEK_DOCKERHUB }}/myapp:${{ env.VERSION }}
+          docker push ${{ secrets.OFEK_DOCKERHUB }}/myapp:${{ env.VERSION }}
 
       - name: Deploy to AWS EC2
         run: |
           echo "Deploying to EC2..."
           ssh -o StrictHostKeyChecking=no -i {{ secrets.AWS_EC2_KEY  }} ubuntu@${{ secrets.AWS_EC2_IP }} << 'EOF'
-            sudo docker pull myapp:$VERSION
+            sudo docker pull myapp:${{ env.VERSION }}
             sudo docker stop myapp || true
             sudo docker rm myapp || true
-            sudo docker run -d -p 80:8080 --name myapp myapp:$VERSION
+            sudo docker run -d -p 80:8080 --name myapp myapp:${{ env.VERSION }}
           EOF

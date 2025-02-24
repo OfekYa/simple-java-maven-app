@@ -16,8 +16,8 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
-          fetch-tags: true
+          fetch_depth: 0
+          fetch_tags: true
 
       - name: Calculate Current Version
         id: calculate-version

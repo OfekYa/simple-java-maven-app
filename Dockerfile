@@ -1,6 +1,6 @@
 # Stage 1: Build the JAR file
 FROM maven:3.9.2-eclipse-temurin-17 AS build
-
+ARG BUILD_VERSION
 WORKDIR /app
 COPY . .
 RUN mvn versions:set -DnewVersion=${BUILD_VERSION} -DgenerateBackup=false

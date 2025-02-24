@@ -29,7 +29,7 @@ jobs:
 
       - name: Store Version as an Environment Variable
         run: echo "VERSION=${{ steps.calculate-version.outputs.version-string }}" >> $GITHUB_ENV
-        
+
       - name: Debug Environment Variable
         run: echo "🟢 Using Version: $VERSION"
 

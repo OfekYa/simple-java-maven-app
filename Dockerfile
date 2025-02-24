@@ -3,7 +3,9 @@ FROM maven:3.9.2-eclipse-temurin-17 AS build
 
 WORKDIR /app
 COPY . .
+RUN mvn versions:set -DnewVersion=${BUILD_VERSION} -DgenerateBackup=false
 RUN mvn clean package -DskipTests
+RUN ls -la
 
 # Stage 2: Run the JAR file
 FROM eclipse-temurin:17-jre

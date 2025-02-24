@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . .
 RUN mvn versions:set -DnewVersion=${BUILD_VERSION} -DgenerateBackup=false
 RUN mvn clean package -DskipTests
-RUN ls -la
+RUN ls -la target
 
 # Stage 2: Run the JAR file
 FROM eclipse-temurin:17-jre

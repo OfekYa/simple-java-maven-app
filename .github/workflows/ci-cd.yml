@@ -28,7 +28,7 @@ jobs:
           tag_prefix: 'v'
 
       - name: Use Calculated Version
-        run: echo "Calculated version: ${{ steps.calculate-version.outputs.version-string }}"
+        run: echo "Calculated version: ${{ steps.calculate-version.outputs.version }}"
 
       - name: Build Docker Image
         run: |
